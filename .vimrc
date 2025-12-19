@@ -29,7 +29,7 @@ Plug 'junegunn/fzf.vim'
 call plug#end()
 
 if empty(glob('~/.config/coc/extensions/package.json'))
-  autocmd VimEnter * CocInstall -sync coc-clangd coc-snippets coc-tsserver coc-json coc-python coc-emmet
+  autocmd VimEnter * CocInstall -sync coc-clangd coc-snippets coc-tsserver coc-json coc-python coc-emmet coc-texlab
 endif
 
 
@@ -69,7 +69,6 @@ noremap <leader>h :nohl<CR>
 noremap <leader>e :NERDTreeToggle<CR>
 noremap <leader>s :set spell!<CR>
 noremap <leader>m <Plug>MarkdownPreviewToggle
-autocmd FileType tex nnoremap <buffer> <leader>c :VimtexTocToggle<CR>
 
 " Finding
 set path+=**            " Search down into subfolder and provide tab-completion
@@ -120,11 +119,12 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
 inoremap <expr> <CR> pumvisible() ? coc#_select_confirm() : "\<CR>"
 nnoremap <silent> K :call ShowDocumentation()<CR>
 nmap <Leader>rn <Plug>(coc-rename)
-nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gD <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> <leader>d :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <Leader>EEE :call CocAction('diagnosticInfo')<CR>
 command! Fix call CocActionAsync('codeAction', 'cursor')
 cabbrev fix Fix
 
@@ -167,3 +167,15 @@ nnoremap <Leader>g :Rg<CR>
 nnoremap <Leader>b :Buffers<CR>
 nnoremap <Leader>l :BLines<CR>
 set rtp+=/opt/homebrew/opt/fzf
+
+" vimtex
+let g:vimtex_view_method = 'skim'
+let g:vimtex_view_skim_activate = 1
+let g:vimtex_view_skim_reading_bar = 1
+nnoremap <F5> :VimtexCompile<CR>
+autocmd FileType tex nnoremap <buffer> <leader>lc :VimtexTocToggle<CR>
+nmap <Leader>lv <Plug>(vimtex-view)
+autocmd FileType tex
+  \ if has('clientserver') && empty(v:servername) |
+  \   silent! call remote_startserver('VIM_LATEX') |
+  \ endif
